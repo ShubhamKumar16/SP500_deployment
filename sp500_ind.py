@@ -86,6 +86,9 @@ elif choice == 'Predion model':
 	data_load_state.text("Done! (using st.cache)")
 	st.write(sp500_ind.tail(10))
 	
+	scaler_x = pickle.load(open('scaler_x.sav','rb'))
+	scaler_y = pickle.load(open('scaler_y.sav','rb'))
+	loaded_model = load_model('model.h5')
 	
 	X = sp500_ind[['Open','High','Low','Close','Volume']].tail(10).values
 	X_scaled=scaler_x.fit_transform(np.array(X))
