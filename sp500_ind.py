@@ -16,7 +16,7 @@ from sklearn.preprocessing import MinMaxScaler
 @st.cache
 def download_stock_data(stock_list):
     curr_date = datetime.datetime.now()
-    prev_date = curr_date - datetime.timedelta(days=20)
+    prev_date = curr_date - datetime.timedelta(days=12)
     period_1 = int(prev_date.timestamp())
     period_2 = int(curr_date.timestamp())
     params ={
