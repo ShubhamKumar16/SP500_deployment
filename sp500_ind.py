@@ -1,0 +1,118 @@
+import streamlit as st
+import pandas as pd
+import numpy as np
+import requests
+import matplotlib.pyplot as plt
+import datetime
+import pickle
+## importing necessery library
+from tensorflow import keras as keras
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import LSTM
+from tensorflow.keras.layers import Dropout
+from tensorflow.keras.models import load_model
+from sklearn.preprocessing import MinMaxScaler
+@st.cache
+def download_stock_data(stock_list):
+    curr_date = datetime.datetime.now()
+    prev_date = curr_date - datetime.timedelta(days=14)
+    period_1 = int(prev_date.timestamp())
+    period_2 = int(curr_date.timestamp())
+    params ={
+    'period1': period_1, #this is timestamp for date 01/01/2014 20:38:12
+    'period2': period_2, #this is timestamp for date 01/01/2018 20:38:11
+    'events' : 'history'
+     }
+    stock_data = []
+    for stock in stock_list:
+        #user agent is an identity string which helps the server to identify about its clients
+        # use your own user agent !
+        response = requests.get(stock_url.format(stock),params = params, headers = 
+    {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'})
+        response = response.text
+        response = response.split('\n')
+      
+        for row in response:
+            row = row.split(',')
+            #we need to drop the 1st row of each stock,because it contains header information
+            if row!= ['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume'] :
+                #adding the stock name / ticker, since it is not mentioned in response from request
+             
+                stock_data.append(row)
+        
+        #now let's convert into pandas dataframe
+    stock_data = pd.DataFrame(stock_data, columns = ['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume'])
+    stock_data['Date'] = pd.to_datetime(stock_data['Date'])
+	#stock_data.set_index('Date',drop = True,inplace = True)
+  
+    #stock_data will be a list of data, so we need to convert it into pandas dataframe in future
+	#stock_data['Ticker'] = sp500_ind['Ticker'].apply(lambda x : 'SP500_Ind' if x == '%5EGSPC' else x)
+    return stock_data
+
+#Since, date column is of object type, we need to convert it into Datetime type
+#sp500_ind['Date'] = pd.to_datetime(sp500_ind['Date'])
+#sp500_ind.set_index('Date',drop = True,inplace = True)
+#Date = st.slider(sp500_ind['Date'])
+
+def price_plot(df):
+  df['Date'] = df.index
+  fig = plt.figure()
+  plt.plot(df.Open, color='skyblue', alpha=0.8)
+  plt.title(df, fontweight='bold')
+  plt.xlabel('Date', fontweight='bold')
+  plt.ylabel('Opening Price', fontweight='bold')
+  return st.pyplot(fig)
+  
+def main():
+	st.title("SP500 Stock Price Prediction")
+	
+	menu = ['Home', 'plot_data']
+	choice = st.sidebar.selectbox("Menu", menu)
+	
+	if choice == 'Home':
+		st.subheader('Home')
+	elif choice == 'plot_data':
+		st.subheader('plot_data')
+	return choice
+	
+if __name__ == '__main__':
+	choice = main()
+	
+	
+if choice == 'Home':
+	"""In this project we will predict future stock price of SP500 index , using previous 63 days info which include 'Open','High','Low','Close','Volume',
+	A very imp point to note is that, this prediction model should not be consider as a solely baseline  to invest your hard money to invest in stock, please
+	make your own research before investment"""
+
+elif choice == 'plot_data':
+	#we will download our data from yahoo finance url
+	stock_url = "https://query1.finance.yahoo.com/v7/finance/download/{}"
+	
+	sp500_ind = download_stock_data(['%5EGSPC'])
+	data_load_state = st.text('Loading data...')
+	data_load_state.text("Done! (using st.cache)")
+	st.write(sp500_ind.head(10))
+	
+	#time_series = sp500_ind['Open']
+	#st.write('This is a line_chart.')
+	#with open(r"C:\Users\DELL\streamlit_data_app\model.pkl","rb") as pickle_in:
+	    #model = pickle.load(pickle_in)
+	#price_plot(sp500_ind)
+	#filename = 'finalized_model.sav'
+	#loaded_model = pickle.load(open(filename, 'rb'))
+	scaler_x = pickle.load(open('scaler_x.sav','rb'))
+	scaler_y = pickle.load(open('scaler_y.sav','rb'))
+	loaded_model = load_model('model.h5')
+	
+	X = sp500_ind[['Open','High','Low','Close','Volume']].tail(10).values
+	X_scaled=scaler_x.fit_transform(np.array(X))
+	
+	
+	X_up_scaled=scaler_x.inverse_transform(np.array(X_scaled))
+	train_predict = loaded_model.predict(np.array([X_scaled]))
+	y_pred = scaler_y.inverse_transform(train_predict)
+	#Price tomorrow = Price today * (Return + 1)
+	pred_price = X_up_scaled[-1][0] * (y_pred +1)
+	st.write(pred_price)
+	
