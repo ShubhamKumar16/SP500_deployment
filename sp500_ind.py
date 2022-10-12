@@ -81,7 +81,7 @@ if __name__ == '__main__':
 	
 	
 if choice == 'Home':
-	"""In this project we will predict future stock price of SP500 index , using previous 63 days info which include 'Open','High','Low','Close','Volume',
+	"""In this project we will predict future stock price of SP500 index , using previous 10 days info which include 'Open','High','Low','Close','Volume',
 	A very imp point to note is that, this prediction model should not be consider as a solely baseline  to invest your hard money to invest in stock, please
 	make your own research before investment"""
 
@@ -98,7 +98,7 @@ elif choice == 'plot_data':
 	#st.write('This is a line_chart.')
 	#with open(r"C:\Users\DELL\streamlit_data_app\model.pkl","rb") as pickle_in:
 	    #model = pickle.load(pickle_in)
-	#price_plot(sp500_ind)
+	price_plot(sp500_ind)
 	#filename = 'finalized_model.sav'
 	#loaded_model = pickle.load(open(filename, 'rb'))
 	scaler_x = pickle.load(open('scaler_x.sav','rb'))
