@@ -55,14 +55,6 @@ def download_stock_data(stock_list):
 #sp500_ind.set_index('Date',drop = True,inplace = True)
 #Date = st.slider(sp500_ind['Date'])
 
-def price_plot(df):
-  df['Date'] = df.index
-  fig = plt.figure()
-  plt.plot(df.Date, df.Open)
-  plt.title('Date vs Opening price')
-  plt.xlabel('Date')
-  plt.ylabel('Opening Price')
-  return st.pyplot(fig)
   
 def main():
 	st.title("SP500 Stock Price Prediction")
@@ -94,16 +86,6 @@ elif choice == 'Predion model':
 	data_load_state.text("Done! (using st.cache)")
 	st.write(sp500_ind.tail(10))
 	
-	#time_series = sp500_ind['Open']
-	#st.write('This is a line_chart.')
-	#with open(r"C:\Users\DELL\streamlit_data_app\model.pkl","rb") as pickle_in:
-	    #model = pickle.load(pickle_in)
-	price_plot(sp500_ind)
-	#filename = 'finalized_model.sav'
-	#loaded_model = pickle.load(open(filename, 'rb'))
-	scaler_x = pickle.load(open('scaler_x.sav','rb'))
-	scaler_y = pickle.load(open('scaler_y.sav','rb'))
-	loaded_model = load_model('model.h5')
 	
 	X = sp500_ind[['Open','High','Low','Close','Volume']].tail(10).values
 	X_scaled=scaler_x.fit_transform(np.array(X))
