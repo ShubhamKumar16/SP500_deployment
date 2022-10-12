@@ -114,5 +114,5 @@ elif choice == 'plot_data':
 	y_pred = scaler_y.inverse_transform(train_predict)
 	#Price tomorrow = Price today * (Return + 1)
 	pred_price = X_up_scaled[-1][0] * (y_pred +1)
-	st.write(pred_price)
+	st.write("Next day prediction for S&P500 ind is ",pred_price)
 	
