@@ -16,7 +16,7 @@ from sklearn.preprocessing import MinMaxScaler
 @st.cache
 def download_stock_data(stock_list):
     curr_date = datetime.datetime.now()
-    prev_date = curr_date - datetime.timedelta(days=14)
+    prev_date = curr_date - datetime.timedelta(days=20)
     period_1 = int(prev_date.timestamp())
     period_2 = int(curr_date.timestamp())
     params ={
@@ -92,7 +92,7 @@ elif choice == 'plot_data':
 	sp500_ind = download_stock_data(['%5EGSPC'])
 	data_load_state = st.text('Loading data...')
 	data_load_state.text("Done! (using st.cache)")
-	st.write(sp500_ind.head(10))
+	st.write(sp500_ind.tail(10))
 	
 	#time_series = sp500_ind['Open']
 	#st.write('This is a line_chart.')
@@ -105,7 +105,7 @@ elif choice == 'plot_data':
 	scaler_y = pickle.load(open('scaler_y.sav','rb'))
 	loaded_model = load_model('model.h5')
 	
-	X = sp500_ind[['Open','High','Low','Close','Volume']].tail(10).values
+	X = sp500_ind[['Open','High','Low','Close','Volume']].head(10).values
 	X_scaled=scaler_x.fit_transform(np.array(X))
 	
 	
