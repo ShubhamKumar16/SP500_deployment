@@ -85,7 +85,7 @@ if choice == 'Home':
 	A very imp point to note is that, this prediction model should not be consider as a solely baseline  to invest your hard money to invest in stock, please
 	make your own research before investment"""
 
-elif choice == 'plot_data':
+elif choice == 'Predion model':
 	#we will download our data from yahoo finance url
 	stock_url = "https://query1.finance.yahoo.com/v7/finance/download/{}"
 	
