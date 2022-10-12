@@ -16,7 +16,7 @@ from sklearn.preprocessing import MinMaxScaler
 @st.cache
 def download_stock_data(stock_list):
     curr_date = datetime.datetime.now()
-    prev_date = curr_date - datetime.timedelta(days=12)
+    prev_date = curr_date - datetime.timedelta(days=14)
     period_1 = int(prev_date.timestamp())
     period_2 = int(curr_date.timestamp())
     params ={
@@ -58,10 +58,10 @@ def download_stock_data(stock_list):
 def price_plot(df):
   df['Date'] = df.index
   fig = plt.figure()
-  plt.plot(df.Open, color='skyblue', alpha=0.8)
-  plt.title(df, fontweight='bold')
-  plt.xlabel('Date', fontweight='bold')
-  plt.ylabel('Opening Price', fontweight='bold')
+  plt.plot(df.Date, df.Open)
+  plt.title('Date vs Opening price')
+  plt.xlabel('Date')
+  plt.ylabel('Opening Price')
   return st.pyplot(fig)
   
 def main():
@@ -98,14 +98,14 @@ elif choice == 'Predion model':
 	#st.write('This is a line_chart.')
 	#with open(r"C:\Users\DELL\streamlit_data_app\model.pkl","rb") as pickle_in:
 	    #model = pickle.load(pickle_in)
-	#price_plot(sp500_ind)
+	price_plot(sp500_ind)
 	#filename = 'finalized_model.sav'
 	#loaded_model = pickle.load(open(filename, 'rb'))
 	scaler_x = pickle.load(open('scaler_x.sav','rb'))
 	scaler_y = pickle.load(open('scaler_y.sav','rb'))
 	loaded_model = load_model('model.h5')
 	
-	X = sp500_ind[['Open','High','Low','Close','Volume']].head(10).values
+	X = sp500_ind[['Open','High','Low','Close','Volume']].tail(10).values
 	X_scaled=scaler_x.fit_transform(np.array(X))
 	
 	
