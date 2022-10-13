@@ -55,12 +55,12 @@ def download_stock_data(stock_list):
 def main():
 	st.title("SP500 Stock Price Prediction")
 	
-	menu = ['Home', 'Predion model']
+	menu = ['Home', 'Prediction model']
 	choice = st.sidebar.selectbox("Menu", menu)
 	
 	if choice == 'Home':
 		st.subheader('Home')
-	elif choice == 'Predion model':
+	elif choice == 'Prediction model':
 		st.subheader('Prediction model')
 	return choice
 	
@@ -73,7 +73,7 @@ if choice == 'Home':
 	A  very  imp  point  to  note  here is  that,  this  prediction  model  should  not  be  consider  as  a  solely baseline  to  invest  your  hard  money  to  invest  in  stock,  please
 	make  your  own  research  before  investment"""
 
-elif choice == 'Predion model':
+elif choice == 'Prediction model':
 	#we will download our data from yahoo finance url
 	stock_url = "https://query1.finance.yahoo.com/v7/finance/download/{}"
 	
