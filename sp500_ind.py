@@ -20,8 +20,8 @@ def download_stock_data(stock_list):
     period_1 = int(prev_date.timestamp())
     period_2 = int(curr_date.timestamp())
     params ={
-    'period1': period_1, #this is timestamp for date 01/01/2014 20:38:12
-    'period2': period_2, #this is timestamp for date 01/01/2018 20:38:11
+    'period1': period_1, 
+    'period2': period_2,
     'events' : 'history'
      }
     stock_data = []
@@ -44,16 +44,12 @@ def download_stock_data(stock_list):
         #now let's convert into pandas dataframe
     stock_data = pd.DataFrame(stock_data, columns = ['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume'])
     stock_data['Date'] = pd.to_datetime(stock_data['Date'])
-	#stock_data.set_index('Date',drop = True,inplace = True)
   
     #stock_data will be a list of data, so we need to convert it into pandas dataframe in future
 	#stock_data['Ticker'] = sp500_ind['Ticker'].apply(lambda x : 'SP500_Ind' if x == '%5EGSPC' else x)
     return stock_data
 
-#Since, date column is of object type, we need to convert it into Datetime type
-#sp500_ind['Date'] = pd.to_datetime(sp500_ind['Date'])
-#sp500_ind.set_index('Date',drop = True,inplace = True)
-#Date = st.slider(sp500_ind['Date'])
+
 
   
 def main():
@@ -65,7 +61,7 @@ def main():
 	if choice == 'Home':
 		st.subheader('Home')
 	elif choice == 'Predion model':
-		st.subheader('Predion model')
+		st.subheader('Prediction model')
 	return choice
 	
 if __name__ == '__main__':
@@ -73,9 +69,9 @@ if __name__ == '__main__':
 	
 	
 if choice == 'Home':
-	"""In this project we will predict future stock price of SP500 index , using previous 10 days info which include 'Open','High','Low','Close','Volume',
-	A very imp point to note is that, this prediction model should not be consider as a solely baseline  to invest your hard money to invest in stock, please
-	make your own research before investment"""
+	"""In  this  project  we  will  predict  future  stock  price  of  SP500  index , using  previous  10  days  info  which  include  'Open', 'High', 'Low',' Close', 'Volume',
+	A  very  imp  point  to  note  here is  that,  this  prediction  model  should  not  be  consider  as  a  solely baseline  to  invest  your  hard  money  to  invest  in  stock,  please
+	make  your  own  research  before  investment"""
 
 elif choice == 'Predion model':
 	#we will download our data from yahoo finance url
@@ -95,9 +91,9 @@ elif choice == 'Predion model':
 	
 	
 	X_up_scaled=scaler_x.inverse_transform(np.array(X_scaled))
-	train_predict = loaded_model.predict(np.array([X_scaled]))
-	y_pred = scaler_y.inverse_transform(train_predict)
+	y_predict = loaded_model.predict(np.array([X_scaled]))
+	return_pred = scaler_y.inverse_transform(y_predict)
 	#Price tomorrow = Price today * (Return + 1)
-	pred_price = X_up_scaled[-1][0] * (y_pred +1)
+	pred_price = X_up_scaled[-1][0] * (return_pred + 1)
 	st.write("Next day prediction for S&P500 ind is ",pred_price)
 	
